@@ -4,6 +4,9 @@
 import curses
 import ystockquote
 
+#user created imports
+import stocks
+
 ## GLOBALS ##
 x = 1
 term_size_change = False
@@ -61,13 +64,13 @@ def open_top(scr_dim):
 
 def open_left(scr_dim):
 
-    left_scr = curses.newwin(scr_dim[0]-5, 10, 5, 0)
+    left_scr = curses.newwin(scr_dim[0]-5-1, 10, 5, 0)
 
     return left_scr
 
 def open_main(scr_dim):
 
-    main_scr = curses.newwin(scr_dim[0]-5, scr_dim[1]-10, 5, 10)
+    main_scr = curses.newwin(scr_dim[0]-5-1, scr_dim[1]-10, 5, 10)
 
     return main_scr
 
@@ -77,7 +80,13 @@ def open_strip(scr_dim):
 
     return strip_scr
 
-def window_colors(scr_top, scr_strip, scr_left, scr_main):
+def open_bottom(scr_dim):
+
+    bottom_scr = curses.newwin(1, scr_dim[1], scr_dim[0]-1, 0)
+
+    return bottom_scr
+
+def window_colors(scr_top, scr_strip, scr_left, scr_main, scr_bottom):
 
     curses.start_color()
 
@@ -90,14 +99,16 @@ def window_colors(scr_top, scr_strip, scr_left, scr_main):
     scr_strip.bkgd(curses.color_pair(4))
     scr_left.bkgd(curses.color_pair(2))
     scr_main.bkgd(curses.color_pair(3))
+    scr_bottom.bkgd(curses.color_pair(4))
 
 #refreshes the visible windows in order
-def refresh_windows(scr_top, scr_strip, scr_left, scr_main):
+def refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom):
 
     scr_top.refresh()
     scr_strip.refresh()
     scr_left.refresh()
     scr_main.refresh()
+    scr_bottom.refresh()
 
 
 ## WORKFLOW ##
@@ -130,14 +141,29 @@ while x != ord("0"):
     scr_left = open_left(scr_dim)
     scr_main = open_main(scr_dim)
     scr_strip = open_strip(scr_dim)
+    scr_bottom = open_bottom(scr_dim)
 
-    window_colors(scr_top, scr_strip, scr_left, scr_main)
+    window_colors(scr_top, scr_strip, scr_left, scr_main, scr_bottom)
 
     scr.refresh()
-    refresh_windows(scr_top, scr_strip, scr_left, scr_main)
 
     if option_window_open == True:
         win.refresh()
+
+    stock_list = stocks.open_stock_codes()
+
+    total_stock_count = len(stock_list)
+
+    counter = 0
+    stock_data = {}
+
+    for stock in stock_list:
+        data = stocks.generate_stock_objects(str(stock))
+        stock_data[str(stock)] = stocks.Stock(str(stock), data)
+        stocks.print_data(counter, stock_data[str(stock)], scr_left, scr_main, scr_strip)
+        counter = counter + 1
+
+    refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom)
 
     x = scr.getch()
 
