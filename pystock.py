@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 
+"""
+Gives general functionality of the curses application
+"""
+
 ## IMPORTS ##
 import curses
 import ystockquote
+import os
+import subprocess
 
 #user created imports
 import stocks
@@ -21,6 +27,7 @@ def init_scr():
     curses.noecho()
     curses.cbreak()
     curses.curs_set(0)
+    curses.halfdelay(5)
     scr.keypad(True)
     scr.clear()    
 
@@ -115,6 +122,8 @@ def refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom):
 scr = init_scr()
 scr_dim = get_scr_dim(scr)
 
+subprocess.Popen(["python", "get_data.py"])
+
 #main loop
 while x != ord("0"):
 
@@ -128,7 +137,6 @@ while x != ord("0"):
         term_size_change == False
 
     scr_dim = get_scr_dim(scr)
-    scr.clear()
 
     if x == ord("9"):
         option_window_open = True
@@ -145,25 +153,29 @@ while x != ord("0"):
 
     window_colors(scr_top, scr_strip, scr_left, scr_main, scr_bottom)
 
-    scr.refresh()
-
     if option_window_open == True:
         win.refresh()
 
     stock_list = stocks.open_stock_codes()
 
     total_stock_count = len(stock_list)
+    
+    all_stock_data_dict = stocks.get_all_data()
 
     counter = 0
     stock_data = {}
 
     for stock in stock_list:
-        data = stocks.generate_stock_objects(str(stock))
+        data = all_stock_data_dict[str(stock)]
         stock_data[str(stock)] = stocks.Stock(str(stock), data)
         stocks.print_data(counter, stock_data[str(stock)], scr_left, scr_main, scr_strip)
         counter = counter + 1
 
     refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom)
+
+    scr_top.addstr(1, 1, str(x))
+    
+    scr_top.refresh()
 
     x = scr.getch()
 

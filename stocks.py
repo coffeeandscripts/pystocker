@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+Functions for management of the data and stock information. General classes.
+"""
+
 ## IMPORTS ##
 import curses
 import ystockquote
@@ -52,11 +56,18 @@ def open_stock_codes():
 
     return stock_list
 
-def generate_stock_objects(code):
+def fetch_stock_data(code):
 
     data_array = ystockquote.get_all(str(code))
 
     return data_array
+
+def get_all_data():
+
+    with open("stock_data", "r") as f:
+        stock_data_dict = eval(f.read())
+
+    return stock_data_dict
 
 def print_data(n, data, scr_left, scr_main, scr_strip):
 
