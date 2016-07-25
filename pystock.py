@@ -12,6 +12,7 @@ import subprocess
 
 #user created imports
 import stocks
+import user_input
 
 ## GLOBALS ##
 x = 1
@@ -122,10 +123,22 @@ def refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom):
 scr = init_scr()
 scr_dim = get_scr_dim(scr)
 
+cursor = [0, 0]
+stock_data_dict = {}
+
 subprocess.Popen(["python", "get_data.py"])
 
 #main loop
 while x != ord("0"):
+
+    if x == 261:
+        cursor = user_input.cursor_right(cursor)
+    elif x == 260:
+        cursor = user_input.cursor_left(cursor)
+    elif x == 258:
+        cursor = user_input.cursor_down(cursor)
+    elif x == 259:
+        cursor = user_input.cursor_up(cursor)
 
     term_size_change = check_term_size_change(scr, scr_dim)
 
@@ -160,7 +173,7 @@ while x != ord("0"):
 
     total_stock_count = len(stock_list)
     
-    all_stock_data_dict = stocks.get_all_data()
+    all_stock_data_dict = stocks.get_all_data(stock_data_dict)
 
     counter = 0
     stock_data = {}
@@ -168,7 +181,7 @@ while x != ord("0"):
     for stock in stock_list:
         data = all_stock_data_dict[str(stock)]
         stock_data[str(stock)] = stocks.Stock(str(stock), data)
-        stocks.print_data(counter, stock_data[str(stock)], scr_left, scr_main, scr_strip)
+        stocks.print_data(counter, stock_data[str(stock)], scr_left, scr_main, scr_strip, x, cursor)
         counter = counter + 1
 
     refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom)
