@@ -38,6 +38,6 @@ while x == 1:
 
     for stock in stock_list:
         data = stocks.fetch_stock_data(str(stock))
-        prepare_stock_dict(stock, data, stock_data_dict)
+        stock_data_dict = prepare_stock_dict(stock, data, stock_data_dict)
 
     write_stock_data(stock_data_dict)
