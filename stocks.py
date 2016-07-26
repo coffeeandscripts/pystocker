@@ -42,6 +42,11 @@ class Stock:
         self.open = data['open_price']
 
 ## FUNCTIONS ##
+def add_stock_code(stock_input):
+
+    with open("stock_codes", "a") as f:
+        f.write("\n" + str(stock_input))
+    f.close()
 
 #opens a file called stock_codes and returns each line into an array
 def open_stock_codes():

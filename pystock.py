@@ -6,6 +6,7 @@ Gives general functionality of the curses application
 
 ## IMPORTS ##
 import curses
+import curses.textpad as textpad
 import ystockquote
 import os
 import subprocess
@@ -146,17 +147,9 @@ while x != ord("0"):
         term_scr(scr)
         scr = init_scr()
         scr_dim = get_scr_dim(scr)
-        win = open_option_window(scr_dim)
         term_size_change == False
 
     scr_dim = get_scr_dim(scr)
-
-    if x == ord("9"):
-        option_window_open = True
-        win = open_option_window(scr_dim)
-
-    if option_window_open == True:
-        win.border(0)
 
     scr_top = open_top(scr_dim)
     scr_left = open_left(scr_dim)
@@ -171,6 +164,18 @@ while x != ord("0"):
 
     stock_list = stocks.open_stock_codes()
 
+    if cursor[1] > len(stock_list):
+        stock_input = None
+        stock_win = curses.newwin(1, 10, 5+len(stock_list), 0)
+        stock_box = textpad.Textbox(stock_win)
+        stock_input = stock_box.edit()
+        stock_win.refresh()
+        scr_main.addstr(12, 10, str(stock_input))
+        if str(stock_input) != "":
+            stocks.add_stock_code(str(stock_input))
+        else:
+            cursor[1] = cursor[1] - 1
+
     total_stock_count = len(stock_list)
     
     all_stock_data_dict = stocks.get_all_data(stock_data_dict)
@@ -179,10 +184,20 @@ while x != ord("0"):
     stock_data = {}
 
     for stock in stock_list:
-        data = all_stock_data_dict[str(stock)]
-        stock_data[str(stock)] = stocks.Stock(str(stock), data)
-        stocks.print_data(counter, stock_data[str(stock)], scr_left, scr_main, scr_strip, x, cursor)
-        counter = counter + 1
+        if stock in all_stock_data_dict:
+            data = all_stock_data_dict[str(stock)]
+            stock_data[str(stock)] = stocks.Stock(str(stock), data)
+            stocks.print_data(counter, stock_data[str(stock)], scr_left, scr_main, scr_strip, x, cursor)
+            counter = counter + 1
+        else:
+            code_length_missing = 10 - len(stock)
+            for space in range(code_length_missing):
+                stock = stock + " "
+            if cursor[1] == counter + 1:
+                scr_left.addstr(counter, 0, str(stock), curses.A_REVERSE)
+            else:
+                scr_left.addstr(counter, 0, str(stock), curses.A_BLINK)
+            counter = counter + 1
 
     refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom)
 
