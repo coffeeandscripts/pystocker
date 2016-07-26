@@ -31,10 +31,12 @@ def write_stock_data(stock_data_dict):
 
 x = 1
 
+stock_data_dict = {}
+
 while x == 1:
     stock_list = []
     stock_list = stocks.open_stock_codes()
-    stock_data_dict = {}
+    stock_data_dict.clear()
 
     for stock in stock_list:
         data = stocks.fetch_stock_data(str(stock))
