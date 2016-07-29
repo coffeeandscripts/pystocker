@@ -261,7 +261,7 @@ while x != 48 and x != 27:
 
     curses.init_pair(6, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
 
-    scr_top.addstr(0, 0, "pystocker v0.1 - by coffeeandscripts", curses.color_pair(6))
+    scr_top.addstr(0, 0, "pystocker v0.1.1 - by coffeeandscripts", curses.color_pair(6))
     #scr_top.addstr(0, 45, str(x))
     
     scr_top.refresh()

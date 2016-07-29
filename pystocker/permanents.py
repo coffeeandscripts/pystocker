@@ -101,10 +101,5 @@ def print_permanents(scr_top, perm, row, col, perm_data):
                 scr_top.addstr(1+row, col, str(printing_perm), curses.color_pair(21))
         else:
             scr_top.addstr(1+row, col, str(printing_perm))
- 
- 
- 
-    else:
-        scr_top.addstr(1+row, col-1, ">")
 
     return perm_length
