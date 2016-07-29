@@ -81,12 +81,30 @@ def print_permanents(scr_top, perm, row, col, perm_data):
     elif perm[0] == "^":
         perm = perm[1:]
 
+    curses.start_color()
+
+    curses.init_pair(20, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(21, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(22, curses.COLOR_RED, curses.COLOR_BLACK)
 
     printing_perm = str(perm) + "=" + str(perm_data["price"])
 
     perm_length = len(printing_perm) + 1
     
     if perm_length+col < curses.COLS:
-        scr_top.addstr(1+row, col, str(printing_perm))
+        if perm_data["change"] != "N/A":
+            if float(perm_data["change"]) >= 0.5:
+                scr_top.addstr(1+row, col, str(printing_perm), curses.color_pair(20))
+            if float(perm_data["change"]) <= -0.5:
+                scr_top.addstr(1+row, col, str(printing_perm), curses.color_pair(22))
+            else:
+                scr_top.addstr(1+row, col, str(printing_perm), curses.color_pair(21))
+        else:
+            scr_top.addstr(1+row, col, str(printing_perm))
+ 
+ 
+ 
+    else:
+        scr_top.addstr(1+row, col-1, ">")
 
     return perm_length

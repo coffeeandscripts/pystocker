@@ -94,7 +94,7 @@ def open_bottom(scr_dim):
 
     bottom_scr = curses.newwin(1, scr_dim[1], scr_dim[0]-1, 0)
 
-    bottom_scr.addstr(0, 0, "[n]Add [d]Remove [h]View Historical [s]Sort By [m]Order [0/Esc]Exit")
+    bottom_scr.addstr(0, 0, "[n]Add [d]Remove [h]Toggle Historical [s]Sort By [0/Esc]Exit")
 
     return bottom_scr
 
@@ -107,8 +107,8 @@ def window_colors(scr_top, scr_strip, scr_left, scr_main, scr_bottom):
     curses.init_pair(3,curses.COLOR_WHITE,curses.COLOR_GREEN)
     curses.init_pair(4,curses.COLOR_WHITE,curses.COLOR_MAGENTA)
 
-    scr_top.bkgd(curses.color_pair(1))
-    #scr_strip.bkgd(curses.color_pair(4))
+    #scr_top.bkgd(curses.color_pair(1))
+    scr_strip.bkgd(curses.color_pair(1))
     #scr_left.bkgd(curses.color_pair(2))
     #scr_main.bkgd(curses.color_pair(3))
     scr_bottom.bkgd(curses.color_pair(4))
@@ -137,7 +137,7 @@ lockCounter = 0
 proc1 = subprocess.Popen(["python", "get_data.py"])
 
 #main loop
-while x != ord("0"):
+while x != 48 and x != 27:
 
     max_stock_range = curses.LINES - 6 - 1
 
@@ -247,13 +247,17 @@ while x != ord("0"):
     for row in perm_data_dict:
         perm_length = 0
         for perm in perm_list[perm_counter]:
-            perm_length = perm_length + permanents.print_permanents(scr_top, perm, perm_counter, perm_length, row[perm])
+            if perm in row:
+                perm_length = perm_length + permanents.print_permanents(scr_top, perm, perm_counter, perm_length, row[perm])
         perm_counter = perm_counter + 1
 
     refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom)
 
+    curses.start_color()
 
-    scr_top.addstr(0, 0, "pystock v0.1 - by coffeeandscripts")
+    curses.init_pair(6, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
+
+    scr_top.addstr(0, 0, "pystock v0.1 - by coffeeandscripts", curses.color_pair(6))
     scr_top.addstr(0, 45, str(x))
     
     scr_top.refresh()
