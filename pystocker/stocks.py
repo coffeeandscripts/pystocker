@@ -249,7 +249,7 @@ def print_data(n, data, scr_left, scr_main, scr_strip, x, cursor):
         elif info == "open":
             print_stock_data(counter*w, n, data.open, "Open", scr_main, scr_strip, cursor_row, change_amount)
         elif info == "change":
-            print_stock_data(counter*w, n, data.change, "Change", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.change, "%Change", scr_main, scr_strip, cursor_row, change_amount)
         elif info == "volume":
             print_stock_data(counter*w, n, data.volume, "Volume", scr_main, scr_strip, cursor_row, change_amount)
         elif info == "average_daily_volume":

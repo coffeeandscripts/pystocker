@@ -177,6 +177,10 @@ while x != 48 and x != 27:
         move_up = False
         if max_stock_range > len(stock_list):
             max_stock_range = len(stock_list)
+    elif x == 104:          #historical toggle
+        pass
+    elif x == 115:          #sort by
+        pass
 
     shown_stocks = [0 + cursor[1] - cursor[2], max_stock_range + cursor[1] - cursor[2]]
 
@@ -257,8 +261,8 @@ while x != 48 and x != 27:
 
     curses.init_pair(6, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
 
-    scr_top.addstr(0, 0, "pystock v0.1 - by coffeeandscripts", curses.color_pair(6))
-    scr_top.addstr(0, 45, str(x))
+    scr_top.addstr(0, 0, "pystocker v0.1 - by coffeeandscripts", curses.color_pair(6))
+    #scr_top.addstr(0, 45, str(x))
     
     scr_top.refresh()
 
