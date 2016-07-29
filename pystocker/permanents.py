@@ -7,6 +7,9 @@
 ## IMPORTS ##
 import curses
 import ystockquote
+import os
+
+import pystocker
 
 ## FUNCTIONS ##
 
@@ -17,19 +20,19 @@ def get_perm_list():
     row2_list = []
     row3_list = []
 
-    with open("permanents/perm_l1", "r") as f:
+    with open(os.path.dirname(pystocker.__file__) + "/permanents/perm_l1", "r") as f:
         for line in f:
             row1_list.append(line.rstrip('\n'))
     f.close()
     perm_list.append(row1_list)
 
-    with open("permanents/perm_l2", "r") as f:
+    with open(os.path.dirname(pystocker.__file__) + "/permanents/perm_l2", "r") as f:
         for line in f:
             row2_list.append(line.rstrip('\n'))
     f.close()
     perm_list.append(row2_list)
 
-    with open("permanents/perm_l3", "r") as f:
+    with open(os.path.dirname(pystocker.__file__) + "/permanents/perm_l3", "r") as f:
         for line in f:
             row3_list.append(line.rstrip('\n'))
     f.close()
@@ -51,7 +54,7 @@ def prep_perm_dict(perm, perm_data, perm_data_dict, row):
 
 def write_perm_data(perm_data_dict):
 
-    with open("permanents/perm_data", "w") as f:
+    with open(os.path.dirname(pystocker.__file__) + "/permanents/perm_data", "w") as f:
         f.write(str(perm_data_dict))
     f.close()
 
@@ -59,7 +62,7 @@ def write_perm_data(perm_data_dict):
 def read_perm_data():
 
     try:
-        with open("permanents/perm_data", "r") as f:
+        with open(os.path.dirname(pystocker.__file__) + "/permanents/perm_data", "r") as f:
             perm_data_dict = eval(f.read())
     except:
         perm_data_dict = []

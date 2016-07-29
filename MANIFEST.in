@@ -1,0 +1,7 @@
+include pystocker/stock_codes
+include pystocker/info_settings
+include pystocker/stock_data
+include pystocker/permanents/perm_data
+include pystocker/permanents/perm_l1
+include pystocker/permanents/perm_l2
+include pystocker/permanents/perm_l3

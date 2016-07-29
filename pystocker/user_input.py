@@ -9,7 +9,7 @@ import curses
 import ystockquote
 import curses.textpad as textpad
 
-import stocks
+from pystocker import stocks
 
 ## FUNCTIONS ##
 

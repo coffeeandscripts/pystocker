@@ -7,9 +7,10 @@ Functions for management of the data and stock information. General classes.
 ## IMPORTS ##
 import curses
 import ystockquote
+import os
 
 ## GLOBALS ##
-
+import pystocker
 
 ## CLASSES ##
 #custom class for each stock
@@ -44,11 +45,11 @@ class Stock:
 ## FUNCTIONS ##
 def add_stock_code(stock_input):
 
-    f = open("stock_codes", "r")
+    f = open(os.path.dirname(pystocker.__file__) + "/stock_codes", "r")
     stock_codes = f.readlines()
     f.close()
 
-    with open("stock_codes", "a") as f:
+    with open(os.path.dirname(pystocker.__file__) + "/stock_codes", "a") as f:
         if len(stock_codes) >= 1:
             f.write("\n" + str(stock_input))
         else:
@@ -57,14 +58,14 @@ def add_stock_code(stock_input):
 
 def delete_stock_code(stock, all_stock_dict):
     
-    f = open("stock_codes", "r")
+    f = open(os.path.dirname(pystocker.__file__) + "/stock_codes", "r")
     stock_codes_nstrip = f.readlines()
     stock_codes = []
     for line in stock_codes_nstrip:
         stock_codes.append(line.rstrip('\n'))
     f.close()
 
-    f = open("stock_codes", "w")
+    f = open(os.path.dirname(pystocker.__file__) + "/stock_codes", "w")
     del_pos_counter = 0
     for line in stock_codes:
         if line == stock + "\n" or line == stock:
@@ -81,7 +82,7 @@ def delete_stock_code(stock, all_stock_dict):
     if stock in all_stock_dict:
         all_stock_dict.pop(stock)
 
-    f = open("stock_data", "w")
+    f = open(os.path.dirname(pystocker.__file__) + "/stock_data", "w")
     f.write(str(all_stock_dict))
     f.close()
 
@@ -92,7 +93,7 @@ def open_stock_codes():
     
     stock_list = []
 
-    with open("stock_codes", "r") as f:
+    with open(os.path.dirname(pystocker.__file__) + "/stock_codes", "r") as f:
         for line in f:
             stock_list.append(line.rstrip('\n'))
 
@@ -117,7 +118,7 @@ def get_all_data(stock_data_dict):
 
     try:
         stock_data_dict.clear()
-        with open("stock_data", "r") as f:
+        with open(os.path.dirname(pystocker.__file__) + "/stock_data", "r") as f:
             stock_data_dict = eval(f.read())
     except:
         pass
@@ -128,7 +129,7 @@ def get_col_settings():
 
     col_list = []
 
-    with open("info_settings", "r") as f:
+    with open(os.path.dirname(pystocker.__file__) + "/info_settings", "r") as f:
         for line in f:
             col_list.append(line.rstrip('\n'))
 
