@@ -4,6 +4,8 @@ Built using python and ncurses, pystocker is a command-line based utility that p
 Featuring a series of permanent tickers of general market information at the top, you can follow many different features of a single stock and compare them to others. To provide a more visual experience, each of the stocks is color coded to signify the performance on the day.
 Below is an example of pystocker in action:
 
+![Screenshot](https://raw.githubusercontent.com/coffeeandscripts/pystocker/master/example.png "pystocker screenshot")
+
 ## Quickstart Guide
 
 #### Dependencies
