@@ -10,9 +10,8 @@ import curses
 import os
 
 #user generated imports
-import pystocker
-from pystocker import stocks
-from pystocker import permanents
+import stocks
+import permanents
 
 ## CLASSES ##
 
