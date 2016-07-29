@@ -16,6 +16,8 @@ from pystocker import permanents
 
 ## CLASSES ##
 
+root_path = os.path.expanduser("~")
+
 ## FUNCTIONS ##
 # open file to write the dictionary (may edit in future as JSON format)
 def prepare_stock_dict(stock, data, stock_data_dict):
@@ -25,12 +27,14 @@ def prepare_stock_dict(stock, data, stock_data_dict):
     return stock_data_dict
 
 def write_stock_data(stock_data_dict):
-    with open(os.path.dirname(pystocker.__file__) + "/stock_data", "w") as f:
+    with open(root_path + "/.pystocker/stock_data", "w") as f:
         f.write(str(stock_data_dict))
     f.close()
 
 
 ## WORKFLOW ##
+
+os.chdir(root_path)
 
 x = 1
 
