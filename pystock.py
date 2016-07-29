@@ -14,6 +14,7 @@ import subprocess
 #user created imports
 import stocks
 import user_input
+import permanents
 
 ## GLOBALS ##
 x = 1
@@ -126,29 +127,58 @@ def refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom):
 scr = init_scr()
 scr_dim = get_scr_dim(scr)
 
-cursor = [0, 0]
+cursor = [0, 0, 0]
 stock_data_dict = {}
+
+move_up = False
+top_point = False
+lockCounter = 0
 
 proc1 = subprocess.Popen(["python", "get_data.py"])
 
 #main loop
 while x != ord("0"):
 
+    max_stock_range = curses.LINES - 6 - 1
+
+    stock_list = stocks.open_stock_codes()
+    if max_stock_range > len(stock_list):
+        max_stock_range = len(stock_list)
+
     if x == 261:
         cursor = user_input.cursor_right(cursor)
     elif x == 260:
         cursor = user_input.cursor_left(cursor)
     elif x == 258:
-        cursor = user_input.cursor_down(cursor)
+        cursor = user_input.cursor_down(cursor, max_stock_range, move_up)
+        if top_point == True:
+            lockCounter = 0
+        top_point = False    
+        move_up = False
     elif x == 259:
-        cursor = user_input.cursor_up(cursor)
+        if cursor[2] == 1 and top_point == True:
+            lockCounter = lockCounter - 1
+        move_up = True
+        cursor = user_input.cursor_up(cursor, max_stock_range)
+        if cursor[2] == 1:
+            top_point = True
     elif x == 100 or x == 263:
         if cursor[1] > 0 and cursor[1] <= total_stock_count:
             cursor[1] = cursor[1] - 1
-            stock_data_dict = stocks.delete_stock_code(stock_list[cursor[1]], stock_data_dict)
+            cursor[2] = cursor[2] - 1
+            if move_up == True:
+                delete_num = cursor[1] - (max_stock_range - cursor[2]) + (max_stock_range - cursor[1] + 1)
+            else:
+                delete_num = cursor[1]
+            stock_data_dict = stocks.delete_stock_code(stock_list[delete_num], stock_data_dict)
     elif x == 110 or x == 78:
-        if cursor[1] <= total_stock_count:
-            cursor[1] = total_stock_count + 1
+        cursor = user_input.input_n(cursor, scr_bottom, max_stock_range, stock_list)
+        stock_list = stocks.open_stock_codes()
+        move_up = False
+        if max_stock_range > len(stock_list):
+            max_stock_range = len(stock_list)
+
+    shown_stocks = [0 + cursor[1] - cursor[2], max_stock_range + cursor[1] - cursor[2]]
 
     term_size_change = check_term_size_change(scr, scr_dim)
 
@@ -168,9 +198,6 @@ while x != ord("0"):
 
     window_colors(scr_top, scr_strip, scr_left, scr_main, scr_bottom)
 
-    if option_window_open == True:
-        win.refresh()
-
     stock_list = stocks.open_stock_codes()
     
     total_stock_count = len(stock_list)
@@ -178,9 +205,24 @@ while x != ord("0"):
     stock_data_dict = stocks.get_all_data(stock_data_dict)
 
     counter = 0
+    nCounter = counter
+
     stock_data = {}
 
+    #scr_main.addstr(15, 10, str(total_stock_count))
+
     for stock in stock_list:
+        if nCounter < cursor[1] - cursor[2] and move_up == False:
+            nCounter = nCounter + 1
+            lockCounter = nCounter
+            continue
+
+        if move_up == True and nCounter < lockCounter:
+            nCounter = nCounter + 1
+            continue
+
+        if counter > max_stock_range - 1:
+            continue
         if stock in stock_data_dict:
             data = stock_data_dict[str(stock)]
             stock_data[str(stock)] = stocks.Stock(str(stock), data)
@@ -190,35 +232,29 @@ while x != ord("0"):
             code_length_missing = 10 - len(stock)
             for space in range(code_length_missing):
                 stock = stock + " "
-            if cursor[1] == counter + 1:
+            if cursor[2] == counter + 1:
                 scr_left.addstr(counter, 0, str(stock), curses.A_REVERSE)
             else:
                 scr_left.addstr(counter, 0, str(stock), curses.A_BLINK)
             counter = counter + 1
 
-    if cursor[1] > len(stock_list):
-        stock_input = None
-        curses.start_color()
-        curses.init_pair(5,curses.COLOR_WHITE,curses.COLOR_BLUE)
-        stock_win = curses.newwin(1, 10, 5+len(stock_list), 0)
-        stock_win.bkgd(curses.color_pair(5))
-        stock_box = textpad.Textbox(stock_win)
-        stock_win.refresh()
-        scr_bottom.addstr(0, curses.COLS-20, "   [Enter]Save/Exit")
-        scr_bottom.refresh()
-        stock_input = stock_box.edit()
-        scr_main.addstr(12, 10, str(stock_input))
-        if str(stock_input) != "" and str(stock_input) not in stock_list:
-            stocks.add_stock_code(str(stock_input))
-        elif str(stock_input) in stock_list:
-            stock_pos = stock_list.index(str(stock_input)) + 1
-            cursor[1] = stock_pos
-        else:
-            cursor[1] = cursor[1] - 1
+    perm_list = permanents.get_perm_list()
+
+    perm_data_dict = permanents.read_perm_data()
+
+    perm_counter = 0
+
+    for row in perm_data_dict:
+        perm_length = 0
+        for perm in perm_list[perm_counter]:
+            perm_length = perm_length + permanents.print_permanents(scr_top, perm, perm_counter, perm_length, row[perm])
+        perm_counter = perm_counter + 1
 
     refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom)
 
-    scr_top.addstr(1, 1, str(x))
+
+    scr_top.addstr(0, 0, "pystock v0.1 - by coffeeandscripts")
+    scr_top.addstr(0, 45, str(x))
     
     scr_top.refresh()
 

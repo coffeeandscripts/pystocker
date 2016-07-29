@@ -195,16 +195,19 @@ def print_data(n, data, scr_left, scr_main, scr_strip, x, cursor):
 
     count = cursor[0]
     
-    scr_main.addstr(15, 20, str(cursor))
+    #scr_main.addstr(15, 20, str(cursor))
 
     stock_code = data.code
 
     stock_code_width_less = 10 - len(stock_code)
 
-    if float(data.change) <= -0.5:
-        change_amount = -1
-    elif float(data.change) >= 0.5:
-        change_amount = 1
+    if data.change != 'N/A':
+        if float(data.change) <= -0.5:
+            change_amount = -1
+        elif float(data.change) >= 0.5:
+            change_amount = 1
+        else:
+            change_amount = 0
     else:
         change_amount = 0
 
@@ -219,7 +222,7 @@ def print_data(n, data, scr_left, scr_main, scr_strip, x, cursor):
     curses.init_pair(12, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(13, curses.COLOR_YELLOW, curses.COLOR_BLACK)
 
-    if cursor[1] == (n + 1):
+    if cursor[2] == (n + 1):
         if change_amount == -1:
             scr_left.addstr(n, 0, stock_code, curses.color_pair(8))
         elif change_amount == 1:
@@ -238,7 +241,7 @@ def print_data(n, data, scr_left, scr_main, scr_strip, x, cursor):
         if counter*w+10+w > curses.COLS:
             break
 
-        if cursor[1] == (n + 1):
+        if cursor[2] == (n + 1):
             cursor_row = 1
 
         if info == "price":
