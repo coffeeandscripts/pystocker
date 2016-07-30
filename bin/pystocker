@@ -126,12 +126,18 @@ def set_up_environment(reset):
     root_path = os.path.expanduser("~")
 
     if not os.path.exists(root_path + "/.pystocker"):
-        os.makedirs(root_path + "/.pystocker", exist_ok=True)
+        try:
+            os.makedirs(root_path + "/.pystocker", exist_ok=True)
+        except:
+            os.makedirs(root_path + "/.pystocker")
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/info_settings " + root_path + "/.pystocker/info_settings")
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/stock_codes " + root_path + "/.pystocker/stock_codes")
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/stock_data " + root_path + "/.pystocker/stock_data")
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/get_data.py " + root_path + "/.pystocker/get_data.py")
-        os.makedirs(root_path + "/.pystocker/permanents", exist_ok=True)
+        try:
+            os.makedirs(root_path + "/.pystocker/permanents", exist_ok=True)
+        except:
+            os.makedirs(root_path + "/.pystocker/permanents")
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/permanents/perm_data " + root_path + "/.pystocker/permanents/perm_data")
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/permanents/perm_l1 " + root_path + "/.pystocker/permanents/perm_l1")
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/permanents/perm_l2 " + root_path + "/.pystocker/permanents/perm_l2")
@@ -295,7 +301,7 @@ while x != 48 and x != 27:
 
     curses.init_pair(6, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
 
-    scr_top.addstr(0, 0, "pystocker v0.1.9 - by coffeeandscripts", curses.color_pair(6))
+    scr_top.addstr(0, 0, "pystocker v0.1.10 - by coffeeandscripts", curses.color_pair(6))
     #scr_top.addstr(0, 45, str(x))
     
     scr_top.refresh()
