@@ -1,5 +1,6 @@
 language: python
 python:
+        - "2.7"
         - "3.2"
         - "3.3"
         - "3.4"
@@ -7,6 +8,6 @@ python:
         - "3.5-dev" # 3.5 development branch
         - "nightly" # currently points to 3.6-dev
 # command to install dependencies
-install: "pip install ystockquote"
+install: "pip install ystockquote setuptools"
 # command to run tests
 script: sudo python3 setup.py install
