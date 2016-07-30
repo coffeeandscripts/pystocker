@@ -1,4 +1,4 @@
-# **pystocker v0.1.9** - lightweight ncurses stock tracker
+# **pystocker v0.1.10** - lightweight ncurses stock tracker
 
 Built using python and ncurses, pystocker is a command-line based utility that provides simple and versatile interface to track stocks around the world.
 
@@ -17,10 +17,12 @@ Below is an example of pystocker in action:
 
 There are multiple installation methods:
 
+**Make sure you are running python3**
+
 ### PyPI
 
 ~~~
-> sudo pip install pystocker
+> sudo pip install pystocker		# May have to run pip3
 > pystocker
 ~~~
 
