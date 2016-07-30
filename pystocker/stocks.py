@@ -6,11 +6,10 @@ Functions for management of the data and stock information. General classes.
 
 ## IMPORTS ##
 import curses
-import ystockquote
 import os
+from pystocker import ystockquote
 
 ## GLOBALS ##
-import pystocker
 
 root_path = os.path.expanduser("~")
 

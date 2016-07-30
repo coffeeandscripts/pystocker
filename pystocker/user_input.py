@@ -6,9 +6,7 @@ Set of functions to correspond to user input
 
 ## IMPORTS ##
 import curses
-import ystockquote
 import curses.textpad as textpad
-
 from pystocker import stocks
 
 ## FUNCTIONS ##

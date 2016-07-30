@@ -5,13 +5,11 @@ Loop in the background to pull data.
 """
 
 ## IMPORTS ##
-import ystockquote
 import curses
 import os
 
 #user generated imports
-import stocks
-import permanents
+from pystocker import *
 
 ## CLASSES ##
 

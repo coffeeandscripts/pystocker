@@ -6,10 +6,9 @@
 
 ## IMPORTS ##
 import curses
-import ystockquote
 import os
-
-import pystocker
+from pystocker import ystockquote
+from pystocker import stocks
 
 root_path = os.path.expanduser("~")
 
