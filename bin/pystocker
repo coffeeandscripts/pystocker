@@ -173,7 +173,17 @@ proc1 = subprocess.Popen(["python3", str(root_path + "/.pystocker/get_data.py")]
 #main loop
 while x != 48 and x != 27:
 
-    max_stock_range = curses.LINES - 6 - 1
+    term_size_change = check_term_size_change(scr, scr_dim)
+
+    if term_size_change == True:
+        term_scr(scr)
+        scr = init_scr()
+        scr_dim = get_scr_dim(scr)
+        term_size_change == False
+
+    scr_dim = get_scr_dim(scr)
+
+    max_stock_range = scr_dim[0] - 6 - 1
 
     stock_list = stocks.open_stock_codes()
     if max_stock_range > len(stock_list):
@@ -184,7 +194,7 @@ while x != 48 and x != 27:
     elif x == 260:
         cursor = user_input.cursor_left(cursor)
     elif x == 258:
-        cursor = user_input.cursor_down(cursor, max_stock_range, move_up)
+        cursor = user_input.cursor_down(cursor, max_stock_range, move_up, scr_dim)
         if top_point == True:
             lockCounter = 0
         top_point = False    
@@ -206,7 +216,7 @@ while x != 48 and x != 27:
                 delete_num = cursor[1]
             stock_data_dict = stocks.delete_stock_code(stock_list[delete_num], stock_data_dict)
     elif x == 110 or x == 78:
-        cursor = user_input.input_n(cursor, scr_bottom, max_stock_range, stock_list)
+        cursor = user_input.input_n(cursor, scr_bottom, max_stock_range, stock_list, scr_dim)
         stock_list = stocks.open_stock_codes()
         move_up = False
         if max_stock_range > len(stock_list):
@@ -217,16 +227,6 @@ while x != 48 and x != 27:
         pass
 
     shown_stocks = [0 + cursor[1] - cursor[2], max_stock_range + cursor[1] - cursor[2]]
-
-    term_size_change = check_term_size_change(scr, scr_dim)
-
-    if term_size_change == True:
-        term_scr(scr)
-        scr = init_scr()
-        scr_dim = get_scr_dim(scr)
-        term_size_change == False
-
-    scr_dim = get_scr_dim(scr)
 
     scr_top = open_top(scr_dim)
     scr_left = open_left(scr_dim)
@@ -264,7 +264,7 @@ while x != 48 and x != 27:
         if stock in stock_data_dict:
             data = stock_data_dict[str(stock)]
             stock_data[str(stock)] = stocks.Stock(str(stock), data)
-            stocks.print_data(counter, stock_data[str(stock)], scr_left, scr_main, scr_strip, x, cursor)
+            stocks.print_data(counter, stock_data[str(stock)], scr_left, scr_main, scr_strip, x, cursor, scr_dim)
             counter = counter + 1
         else:
             code_length_missing = 10 - len(stock)
@@ -286,7 +286,7 @@ while x != 48 and x != 27:
         perm_length = 0
         for perm in perm_list[perm_counter]:
             if perm in row:
-                perm_length = perm_length + permanents.print_permanents(scr_top, perm, perm_counter, perm_length, row[perm])
+                perm_length = perm_length + permanents.print_permanents(scr_top, perm, perm_counter, perm_length, row[perm], scr_dim)
         perm_counter = perm_counter + 1
 
     refresh_windows(scr_top, scr_strip, scr_left, scr_main, scr_bottom)

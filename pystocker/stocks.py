@@ -148,7 +148,7 @@ def get_col_settings():
     return col_list
 
 
-def print_stock_data(col, row, data, title, scr_main, scr_strip, cursor_row, change_amount):
+def print_stock_data(col, row, data, title, scr_main, scr_strip, cursor_row, change_amount, scr_dim):
 
     scr_strip.addstr(0, col+10, title)
 
@@ -156,8 +156,8 @@ def print_stock_data(col, row, data, title, scr_main, scr_strip, cursor_row, cha
     spaces_length = 9 - data_length
     n = 0
 
-    if col+10+18 > curses.COLS:
-        spaces_length = spaces_length + curses.COLS - col-10-9
+    if col+10+18 > scr_dim[1]:
+        spaces_length = spaces_length + scr_dim[1] - col-10-9
 
     while n < spaces_length:
         data = data + " "
@@ -184,7 +184,7 @@ def print_stock_data(col, row, data, title, scr_main, scr_strip, cursor_row, cha
         else:
             scr_main.addstr(row, col, data, curses.color_pair(13))
 
-def print_data(n, data, scr_left, scr_main, scr_strip, x, cursor):
+def print_data(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim):
 
     col_list = get_col_settings()
     remove_col_list = []
@@ -240,52 +240,52 @@ def print_data(n, data, scr_left, scr_main, scr_strip, x, cursor):
             scr_left.addstr(n, 0, stock_code, curses.color_pair(13))
 
     for info in col_list[cursor[0]:]:
-        if counter*w+10+w > curses.COLS:
+        if counter*w+10+w > scr_dim[1]:
             break
 
         if cursor[2] == (n + 1):
             cursor_row = 1
 
         if info == "price":
-            print_stock_data(counter*w, n, data.price, "Price", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.price, "Price", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "open":
-            print_stock_data(counter*w, n, data.open, "Open", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.open, "Open", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "change":
-            print_stock_data(counter*w, n, data.change, "%Change", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.change, "%Change", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "volume":
-            print_stock_data(counter*w, n, data.volume, "Volume", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.volume, "Volume", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "average_daily_volume":
-            print_stock_data(counter*w, n, data.avg_daily_volume, "AvgVol", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.avg_daily_volume, "AvgVol", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "ebitda":
-            print_stock_data(counter*w, n, data.ebitda, "ebitda", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.ebitda, "ebitda", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "market_cap":
-            print_stock_data(counter*w, n, data.market_cap, "MktCap", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.market_cap, "MktCap", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "book_value":
-            print_stock_data(counter*w, n, data.book_value, "BookVal", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.book_value, "BookVal", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "dividend_per_share":
-            print_stock_data(counter*w, n, data.dividend_per_share, "Div/Sh", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.dividend_per_share, "Div/Sh", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "dividend_yield":
-            print_stock_data(counter*w, n, data.dividend_yield, "DivYld", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.dividend_yield, "DivYld", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "earnings_per_share":
-            print_stock_data(counter*w, n, data.earnings_per_share, "Earn/Sh", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.earnings_per_share, "Earn/Sh", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "52_week_high":
-            print_stock_data(counter*w, n, data.fifty_two_week_high, "52wHigh", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.fifty_two_week_high, "52wHigh", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "52_week_low":
-            print_stock_data(counter*w, n, data.fifty_two_week_low, "52wLow", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.fifty_two_week_low, "52wLow", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "50_day_moving_average":
-            print_stock_data(counter*w, n, data.fifty_day_moving_avg, "50dMAvg", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.fifty_day_moving_avg, "50dMAvg", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "200_day_moving_average":
-            print_stock_data(counter*w, n, data.two_hundred_day_moving_avg, "200dMAvg", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.two_hundred_day_moving_avg, "200dMAvg", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "price_earnings_ratio":
-            print_stock_data(counter*w, n, data.price_earnings_ratio, "P/E", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.price_earnings_ratio, "P/E", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "price_earnings_growth_ratio":
-            print_stock_data(counter*w, n, data.price_earnings_growth_ratio, "P/EGth", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.price_earnings_growth_ratio, "P/EGth", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "price_sales_ratio":
-            print_stock_data(counter*w, n, data.price_sales_ratio, "P/Sale", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.price_sales_ratio, "P/Sale", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "price_book_ratio":
-            print_stock_data(counter*w, n, data.price_book_ratio, "P/Book", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.price_book_ratio, "P/Book", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         elif info == "short_ratio":
-            print_stock_data(counter*w, n, data.short_ratio, "Short", scr_main, scr_strip, cursor_row, change_amount)
+            print_stock_data(counter*w, n, data.short_ratio, "Short", scr_main, scr_strip, cursor_row, change_amount, scr_dim)
         
         else:
             counter = counter - 1

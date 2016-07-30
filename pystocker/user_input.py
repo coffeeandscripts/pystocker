@@ -31,7 +31,7 @@ def cursor_left(cursor):
 
     return cursor
 
-def cursor_down(cursor, max_stock_range, move_up):
+def cursor_down(cursor, max_stock_range, move_up, scr_dim):
 
     stock_list = stocks.open_stock_codes()
 
@@ -41,7 +41,7 @@ def cursor_down(cursor, max_stock_range, move_up):
     elif move_up == True and cursor[1] >= max_stock_range:
         cursor[1] = cursor[1] - (max_stock_range - cursor[2]) + 1
         cursor[2] = cursor[2] + 1
-    elif cursor[1] >= max_stock_range and max_stock_range < curses.LINES-6-1:
+    elif cursor[1] >= max_stock_range and max_stock_range < scr_dim[0]-6-1:
         cursor[2] = max_stock_range
         cursor[1] = max_stock_range
     elif cursor[1] == len(stock_list):
@@ -77,12 +77,12 @@ def cursor_up(cursor, max_stock_range):
 
     return cursor
 
-def input_n(cursor, scr_bottom, max_stock_range, stock_list):
+def input_n(cursor, scr_bottom, max_stock_range, stock_list, scr_dim):
 
     stock_input = None
     curses.start_color()
     curses.init_pair(5,curses.COLOR_WHITE,curses.COLOR_BLUE)
-    stock_win = curses.newwin(1, 10, curses.LINES-1, 0)
+    stock_win = curses.newwin(1, 10, scr_dim[0]-1, 0)
     stock_win.bkgd(curses.color_pair(5))
     stock_box = textpad.Textbox(stock_win)
     stock_win.refresh()
@@ -94,7 +94,7 @@ def input_n(cursor, scr_bottom, max_stock_range, stock_list):
     if str(stock_input) != "" and str(stock_input) not in stock_list:
         stocks.add_stock_code(str(stock_input))
         total_stocks = len(stock_list) + 1
-        if total_stocks > curses.LINES - 6:
+        if total_stocks > scr_dim[0] - 6:
             cursor[1] = total_stocks
             cursor[2] = max_stock_range
         else:

@@ -43,7 +43,10 @@ def get_perm_list():
 
 def get_permanents(perm):
 
-    data = ystockquote.get_all(str(perm))
+    try:
+        data = ystockquote.get_all(str(perm))
+    except:
+        data = {str(perm): {'fifty_two_week_low': 'N/A', 'fifty_day_moving_avg': 'N/A', 'price': 'N/A', 'price_book_ratio': 'N/A', 'volume': 'N/A', 'market_cap': 'N/A', 'open_price': 'N/A', 'dividend_yield': 'N/A', 'ebitda': 'N/A', 'change': 'N/A', 'dividend_per_share': 'N/A', 'stock_exchange': 'N/A', 'two_hundred_day_moving_avg': 'N/A', 'fifty_two_week_high': 'N/A', 'price_sales_ratio': 'N/A', 'price_earnings_growth_ratio': 'N/A', 'earnings_per_share': 'N/A', 'short_ratio': 'N/A', 'avg_daily_volume': 'N/A', 'price_earnings_ratio': 'N/A', 'book_value': 'N/A'}}
 
     return data
 
@@ -70,7 +73,7 @@ def read_perm_data():
 
     return perm_data_dict
 
-def print_permanents(scr_top, perm, row, col, perm_data):
+def print_permanents(scr_top, perm, row, col, perm_data, scr_dim):
 
     if perm == "GC=F":
         perm = "Gold"
@@ -95,7 +98,7 @@ def print_permanents(scr_top, perm, row, col, perm_data):
 
     perm_length = len(printing_perm) + 1
     
-    if perm_length+col < curses.COLS:
+    if perm_length+col < scr_dim[1]:
         if perm_data["change"] != "N/A":
             if float(perm_data["change"]) >= 0.5:
                 scr_top.addstr(1+row, col, str(printing_perm), curses.color_pair(20))
