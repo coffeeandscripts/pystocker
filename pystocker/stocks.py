@@ -103,16 +103,16 @@ def open_stock_codes():
     return stock_list
 
 def fetch_stock_data(code):
-    
+
     got_data = False
 
     while got_data == False:
         try:
-            got_data = True
             data_array = ystockquote.get_all(str(code))
+            got_data = True
         except:
             got_data = False
-
+        
     return data_array
 
 def get_all_data(stock_data_dict):

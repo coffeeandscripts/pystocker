@@ -43,11 +43,14 @@ def get_perm_list():
 
 def get_permanents(perm):
 
-    try:
-        data = ystockquote.get_all(str(perm))
-    except:
-        data = {}
-        #data = {str(perm): {'fifty_two_week_low': 'N/A', 'fifty_day_moving_avg': 'N/A', 'price': 'N/A', 'price_book_ratio': 'N/A', 'volume': 'N/A', 'market_cap': 'N/A', 'open_price': 'N/A', 'dividend_yield': 'N/A', 'ebitda': 'N/A', 'change': 'N/A', 'dividend_per_share': 'N/A', 'stock_exchange': 'N/A', 'two_hundred_day_moving_avg': 'N/A', 'fifty_two_week_high': 'N/A', 'price_sales_ratio': 'N/A', 'price_earnings_growth_ratio': 'N/A', 'earnings_per_share': 'N/A', 'short_ratio': 'N/A', 'avg_daily_volume': 'N/A', 'price_earnings_ratio': 'N/A', 'book_value': 'N/A'}}
+    got_data = False
+
+    while got_data == False:
+        try:
+            data = ystockquote.get_all(str(perm))
+            got_data = True
+        except:
+            got_data = False
 
     return data
 
