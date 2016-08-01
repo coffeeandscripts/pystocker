@@ -2,7 +2,7 @@
 
 Built using python and ncurses, pystocker is a command-line based utility that provides simple and versatile interface to track stocks around the world.
 
-Featuring a series of permanent tickers of general market information at the top, you can follow many different features of a single stock and compare them to others. To provide a more visual experience, each of the stocks is color coded to signify the performance on the day.
+Featuring a series of permanent tickers of general market information at the top, you can follow many different features of a single stock and compare them to others. To provide a more visual experience, each of the stocks is color coded to signify the performance on the day. Additionally, you are able to sort the columns based alphabetically or ascending/descending for individual types of data.
 
 Below is an example of pystocker in action:
 
@@ -72,8 +72,6 @@ Reset Settings:
 ## Features to be added
 
 * Presentation of historical data
-
-* Sorting based on columns
 
 ## Licence
 
