@@ -7,6 +7,7 @@ Set of functions to correspond to user input
 ## IMPORTS ##
 import curses
 import curses.textpad as textpad
+import operator
 from pystocker import stocks
 
 ## FUNCTIONS ##
@@ -15,7 +16,10 @@ def cursor_right(cursor):
 
     col_list = stocks.get_col_settings()
 
-    cursor[0] = cursor[0] + 1
+    if cursor[3] == -1:
+        cursor[3] = 0
+    else:
+        cursor[0] = cursor[0] + 1
 
     if cursor[0] > len(col_list) - 1:
         cursor[0] = len(col_list) - 1
@@ -26,6 +30,8 @@ def cursor_left(cursor):
     
     if cursor[0] > 0:
         cursor[0] = cursor[0] - 1
+    elif cursor[0] == 0:
+        cursor[3] = -1
     else:
         cursor[0] = 0
 
@@ -110,3 +116,67 @@ def input_n(cursor, scr_bottom, max_stock_range, stock_list, scr_dim):
             cursor[2] = cursor[1]
 
     return cursor
+
+def sort_data(stock_data_dict, sort_by, sort_order):
+
+    set_up_dict = {}
+
+    for stock in stock_data_dict:
+        value_used = stock_data_dict[stock][sort_by]
+        if value_used == "N/A":
+            value_used == -999999999999
+        if sort_by == "ebitda" or sort_by == "market_cap":
+            if value_used[-1:] == "B":
+                value_used = float(value_used[:-1]) * 1000000000
+            elif value_used[-1:] == "M":
+                value_used = float(value_used[:-1]) * 1000000
+            else:
+                value_used = float(value_used[:-1]) * 1000
+        try:
+            set_up_dict[stock] = float(value_used)
+        except:
+            set_up_dict[stock] = float(-999999999999)
+
+    sorted_stock_list = []
+
+    if sort_order[2] == 0:
+        for key in sorted(set_up_dict, key=set_up_dict.__getitem__):
+            sorted_stock_list.append(key)
+    elif sort_order[2] == 1:
+        for key in sorted(set_up_dict, key=set_up_dict.__getitem__, reverse=True):
+            sorted_stock_list.append(key)
+
+    return sorted_stock_list
+
+def sort_stocks(cursor, stock_list, stock_data_dict, sort_order):
+
+    col_list = stocks.get_col_settings()
+
+    original_stock_list = stock_list
+
+    if cursor[3] == -1:
+        if sort_order[2] == 0:
+            sorted_stock_list = sorted(original_stock_list)
+        elif sort_order[2] == 1:
+            sorted_stock_list = sorted(original_stock_list, reverse=True)
+    else:
+        sort_by = col_list[cursor[0]]
+        if sort_by == "open":
+            sort_by = "open_price"
+        if sort_by == "average_daily_volume":
+            sort_by = "avg_daily_volume"
+        if sort_by == "52_week_high":
+            sort_by = "fifty_two_week_high"
+        if sort_by == "52_week_low":
+            sort_by = "fifty_two_week_low"
+        if sort_by ==  "50_day_moving_average":
+            sort_by = "fifty_day_moving_avg"
+        if sort_by == "200_day_moving_average":
+            sort_by = "two_hundred_day_moving_avg"
+
+        sorted_stock_list = sort_data(stock_data_dict, sort_by, sort_order)
+
+    return sorted_stock_list
+
+
+

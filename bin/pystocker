@@ -163,8 +163,9 @@ def set_up_environment(reset):
 scr = init_scr()
 scr_dim = get_scr_dim(scr)
 
-cursor = [0, 0, 0]
+cursor = [0, 0, 0, 0]
 stock_data_dict = {}
+sort_order = [0, 0, 0]
 
 move_up = False
 top_point = False
@@ -229,8 +230,16 @@ while x != 48 and x != 27:
             max_stock_range = len(stock_list)
     elif x == 104:          #historical toggle
         pass
-    elif x == 115:          #sort by
-        pass
+    elif x == 115:    #sort by
+        if sort_order[0] == cursor[0] and cursor[3] == sort_order[1] and sort_order[2] == 1:
+            sort_order[2] = 0
+        elif sort_order[0] == cursor[0] and cursor[3] == sort_order[1] and sort_order[2] == 0:
+            sort_order[2] = 1
+        else:
+            sort_order[2] = 0
+        sort_order[0] = cursor[0]
+        sort_order[1] = cursor[3]
+        stock_list_sort = user_input.sort_stocks(cursor, stock_list, stock_data_dict, sort_order)
 
     shown_stocks = [0 + cursor[1] - cursor[2], max_stock_range + cursor[1] - cursor[2]]
 
@@ -253,7 +262,10 @@ while x != 48 and x != 27:
 
     stock_data = {}
 
-    #scr_main.addstr(15, 10, str(total_stock_count))
+    try:
+        stock_list = stock_list_sort
+    except:
+        pass
 
     for stock in stock_list:
         if nCounter < cursor[1] - cursor[2] and move_up == False:
@@ -301,9 +313,21 @@ while x != 48 and x != 27:
 
     curses.init_pair(6, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
 
+    if cursor[3] == -1:
+        if sort_order[2] == 0:
+            scr_strip.addstr(0, 0, "v")
+        else:
+            scr_strip.addstr(0, 0, "^")
+    else:
+        if sort_order[2] == 0:
+            scr_strip.addstr(0, 8, "v")
+        else:
+            scr_strip.addstr(0, 8, "^")
     scr_top.addstr(0, 0, "pystocker v0.1.10 - by coffeeandscripts", curses.color_pair(6))
     #scr_top.addstr(0, 45, str(x))
     
+    scr_strip.refresh()
+
     scr_top.refresh()
 
     x = scr.getch()
