@@ -133,6 +133,7 @@ def set_up_environment(reset):
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/info_settings " + root_path + "/.pystocker/info_settings")
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/stock_codes " + root_path + "/.pystocker/stock_codes")
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/stock_data " + root_path + "/.pystocker/stock_data")
+        os.system("cp " + os.path.dirname(pystocker.__file__) + "/hist_data " + root_path + "/.pystocker/hist_data")
         os.system("cp " + os.path.dirname(pystocker.__file__) + "/get_data.py " + root_path + "/.pystocker/get_data.py")
         try:
             os.makedirs(root_path + "/.pystocker/permanents", exist_ok=True)
@@ -147,6 +148,7 @@ def set_up_environment(reset):
             os.system("cp " + os.getcwd() + "/pystocker/info_settings " + root_path + "/.pystocker/info_settings")
             os.system("cp " + os.getcwd() + "/pystocker/stock_codes " + root_path + "/.pystocker/stock_codes")
             os.system("cp " + os.getcwd() + "/pystocker/stock_data " + root_path + "/.pystocker/stock_data")
+            os.system("cp " + os.getcwd() + "/pystocker/hist_data " + root_path + "/.pystocker/hist_data")
             os.system("cp " + os.getcwd() + "/pystocker/get_data.py " + root_path + "/.pystocker/get_data.py")
             os.makedirs(root_path + "/.pystocker/permanents", exist_ok=True)
             os.system("cp " + os.getcwd() + "/pystocker/permanents/perm_data " + root_path + "/.pystocker/permanents/perm_data")
@@ -170,6 +172,8 @@ sort_order = [0, 0, 0]
 move_up = False
 top_point = False
 lockCounter = 0
+historicals = 0
+historical_data = {}
 
 root_path = os.path.expanduser("~")
 
@@ -197,9 +201,15 @@ while x != 48 and x != 27:
         max_stock_range = len(stock_list)
 
     if x == 261:
-        cursor = user_input.cursor_right(cursor)
+        if historicals == 1:
+            cursor = user_input.cursor_left(cursor)     # reverse for historicals
+        else:
+            cursor = user_input.cursor_right(cursor, historicals, scr_dim)
     elif x == 260:
-        cursor = user_input.cursor_left(cursor)
+        if historicals == 1:
+            cursor = user_input.cursor_right(cursor, historicals, scr_dim)    #reverse for historicals
+        else:
+            cursor = user_input.cursor_left(cursor)
     elif x == 258:
         cursor = user_input.cursor_down(cursor, max_stock_range, move_up, scr_dim)
         if top_point == True:
@@ -229,7 +239,16 @@ while x != 48 and x != 27:
         if max_stock_range > len(stock_list):
             max_stock_range = len(stock_list)
     elif x == 104:          #historical toggle
-        pass
+        if historicals == 0:
+            historicals = 1
+            cursor[0] = 0
+            cursor[3] = -1
+            historical_data = stocks.get_historical_data(stock_list)
+        else:
+            historicals = 0
+            historical_data.clear()
+            cursor[0] = 0
+            cursor[3] = -1
     elif x == 115:    #sort by
         if sort_order[0] == cursor[0] and cursor[3] == sort_order[1] and sort_order[2] == 1:
             sort_order[2] = 0
@@ -282,7 +301,16 @@ while x != 48 and x != 27:
         if stock in stock_data_dict:
             data = stock_data_dict[str(stock)]
             stock_data[str(stock)] = stocks.Stock(str(stock), data)
-            stocks.print_data(counter, stock_data[str(stock)], scr_left, scr_main, scr_strip, x, cursor, scr_dim)
+            if historicals == 1:
+                if stock[:-1] in historical_data.keys() or stock in historical_data.keys():
+                    stocks.print_historicals(counter, historical_data[str(stock)[:-1]], scr_left, scr_main, scr_strip, x, cursor, scr_dim, stock_list, str(stock))
+                else:
+                    if cursor[2] == counter + 1:
+                        scr_left.addstr(counter, 0, str(stock), curses.A_REVERSE)
+                    else:
+                        scr_left.addstr(counter, 0, str(stock), curses.A_BLINK)
+            else:
+                stocks.print_data(counter, stock_data[str(stock)], scr_left, scr_main, scr_strip, x, cursor, scr_dim)
             counter = counter + 1
         else:
             code_length_missing = 10 - len(stock)
@@ -324,7 +352,6 @@ while x != 48 and x != 27:
         else:
             scr_strip.addstr(0, 8, "^")
     scr_top.addstr(0, 0, "pystocker v0.1.11 - by coffeeandscripts", curses.color_pair(6))
-    #scr_top.addstr(0, 45, str(x))
     
     scr_strip.refresh()
 

@@ -7,6 +7,7 @@ Functions for management of the data and stock information. General classes.
 ## IMPORTS ##
 import curses
 import os
+import datetime
 from pystocker import ystockquote
 
 ## GLOBALS ##
@@ -108,7 +109,7 @@ def fetch_stock_data(code):
 
     while got_data == False:
         try:
-            data_array = ystockquote.get_all(str(code))
+            data_array = ystockquote.get_all(code)
             got_data = True
         except:
             got_data = False
@@ -294,3 +295,167 @@ def print_data(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim):
         counter = counter + 1
 
     return cursor
+
+def fetch_historical_data(code):
+
+    got_data = False
+
+    years = 1
+    days_per_year = 365.24
+
+    while got_data == False:
+        try:
+            data_array = ystockquote.get_historical_prices(str(code), str((datetime.datetime.now()-datetime.timedelta(days=(years*days_per_year))).date()), str(datetime.datetime.now().date()))
+            got_data = True
+        except:
+            got_data = False
+        
+    return data_array
+
+def generate_date_list(stock_list):
+
+    date_list = []
+
+    today = datetime.datetime.now()
+    date = today
+
+    historical_data = get_historical_data(stock_list)
+
+    years = 1
+    days_in_year = 365.24
+
+    back_counter = 0
+
+    while date > today - datetime.timedelta(days=(years * days_in_year)):
+        
+        date = today - datetime.timedelta(days=back_counter)
+
+        found_date = 0
+
+        for stock in historical_data.keys():
+
+            if str(date.date()) in historical_data[stock].keys():
+                found_date = 1
+                date_list.append(str(date.date()))
+
+            if found_date == 1:
+                break
+
+        back_counter = back_counter + 1
+
+    return date_list
+
+def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim, stock_list, stock_code):
+
+    date_list = generate_date_list(stock_list)
+
+    shown_dates = [0, int((scr_dim[1] - 11)/12)]
+
+    shown_dates[0] = shown_dates[0] + cursor[0]
+    shown_dates[1] = shown_dates[1] + cursor[0]
+
+    date_pos_counter = 0
+    
+    first = 0
+
+    for date_counter in range(shown_dates[0], shown_dates[1]):
+        date_pos_counter = (shown_dates[1] - shown_dates[0]) - date_pos_counter
+        date_used = datetime.datetime.strptime(date_list[date_counter], "%Y-%m-%d")
+        try:
+            day_earlier = datetime.datetime.strptime(date_list[date_counter + 1], "%Y-%m-%d")
+        except:
+            day_earlier = 0
+        scr_strip.addstr(0, 10+((date_pos_counter-1) * 12), str(date_used.date()))
+ 
+        cursor_row = 0
+
+        count = cursor[0]
+
+        stock_code_width_less = 10 - len(stock_code)
+        if day_earlier != 0:
+            change = (eval(data[str(date_used.date())]["Close"]) - eval(data[str(day_earlier.date())]["Close"])) / eval(data[str(date_used.date())]["Adj Close"]) * 100
+        else:
+            change = 0
+
+        if change != 'N/A':
+            if float(change) <= -0.5:
+                change_amount = -1
+            elif float(change) >= 0.5:
+                change_amount = 1
+            else:
+                change_amount = 0
+        else:
+            change_amount = 0
+
+        for x in range(stock_code_width_less):
+            stock_code = stock_code + " "
+    
+        curses.start_color()
+        curses.init_pair(8, curses.COLOR_RED, curses.COLOR_WHITE)
+        curses.init_pair(9, curses.COLOR_GREEN, curses.COLOR_WHITE)
+        curses.init_pair(10, curses.COLOR_BLACK, curses.COLOR_WHITE)
+        curses.init_pair(11, curses.COLOR_RED, curses.COLOR_BLACK)
+        curses.init_pair(12, curses.COLOR_GREEN, curses.COLOR_BLACK)
+        curses.init_pair(13, curses.COLOR_WHITE, curses.COLOR_BLACK)
+
+        if cursor[2] == (n + 1):
+            if change_amount == -1:
+                scr_left.addstr(n, 0, stock_code, curses.color_pair(10))
+            elif change_amount == 1:
+                scr_left.addstr(n, 0, stock_code, curses.color_pair(10))
+            else:
+                scr_left.addstr(n, 0, stock_code, curses.color_pair(10))
+        else:
+            if change_amount == -1:
+                scr_left.addstr(n, 0, stock_code, curses.color_pair(13))
+            elif change_amount == 1:
+                scr_left.addstr(n, 0, stock_code, curses.color_pair(13))
+            else:
+                scr_left.addstr(n, 0, stock_code, curses.color_pair(13))
+
+        try:
+            output_data = str(data[str(date_used.date())]["Close"])
+            
+            data_length = len(output_data)
+            spaces_length = 12 - data_length
+            if first == 0:
+                spaces_length = spaces_length + (scr_dim[1] - ((date_pos_counter + 1) * 12)) + 2
+
+                first = 1
+
+            m = 0
+
+            while m < spaces_length:
+                output_data = output_data + " "
+                m = m + 1
+ 
+            if cursor[2] == (n + 1):
+                if change_amount == -1:
+                    scr_main.addstr(n, ((date_pos_counter-1) * 12), output_data, curses.color_pair(8))
+                elif change_amount == 1:
+                    scr_main.addstr(n, ((date_pos_counter-1) * 12), output_data, curses.color_pair(9))
+                else:
+                    scr_main.addstr(n, ((date_pos_counter-1) * 12), output_data, curses.color_pair(10))
+            else:
+                if change_amount == -1:
+                    scr_main.addstr(n, ((date_pos_counter-1) * 12), output_data, curses.color_pair(11))
+                elif change_amount == 1:
+                    scr_main.addstr(n, ((date_pos_counter-1) * 12), output_data, curses.color_pair(12))
+                else:
+                    scr_main.addstr(n, ((date_pos_counter-1) * 12), output_data, curses.color_pair(13)) 
+        except:
+            scr_main.addstr(n, ((date_pos_counter-1) * 12), "N/A")
+
+        date_pos_counter = (shown_dates[1] - shown_dates[0]) - date_pos_counter + 1
+
+def get_historical_data(stock_list):
+
+    try:
+        with open(root_path + "/.pystocker/hist_data", "r") as f:
+            hist_data_dict = eval(f.read())
+    except:
+        pass
+
+    return hist_data_dict
+
+

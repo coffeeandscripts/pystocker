@@ -12,17 +12,23 @@ from pystocker import stocks
 
 ## FUNCTIONS ##
 
-def cursor_right(cursor):
+def cursor_right(cursor, historicals, scr_dim):
 
     col_list = stocks.get_col_settings()
 
-    if cursor[3] == -1:
+    stock_list = stocks.open_stock_codes()
+
+    date_list = stocks.generate_date_list(stock_list)
+
+    if cursor[3] == -1 and historicals != 1:
         cursor[3] = 0
     else:
-        cursor[0] = cursor[0] + 1
+        if cursor[0] < len(date_list) - int(((scr_dim[1] - 10)/12)+1) :
+            cursor[0] = cursor[0] + 1
 
-    if cursor[0] > len(col_list) - 1:
-        cursor[0] = len(col_list) - 1
+    if historicals != 1:
+        if cursor[0] > len(col_list) - 1:
+            cursor[0] = len(col_list) - 1
 
     return cursor
 
