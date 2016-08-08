@@ -300,12 +300,14 @@ def fetch_historical_data(code):
 
     got_data = False
 
-    years = 1
+    years = 3
     days_per_year = 365.24
 
     while got_data == False:
         try:
             data_array = ystockquote.get_historical_prices(str(code), str((datetime.datetime.now()-datetime.timedelta(days=(years*days_per_year))).date()), str(datetime.datetime.now().date()))
+            for date in data_array.keys():
+                data_array[date] = data_array[date]["Close"]
             got_data = True
         except:
             got_data = False
@@ -321,7 +323,7 @@ def generate_date_list(stock_list):
 
     historical_data = get_historical_data(stock_list)
 
-    years = 1
+    years = 3
     days_in_year = 365.24
 
     back_counter = 0
@@ -373,7 +375,7 @@ def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim
 
         stock_code_width_less = 10 - len(stock_code)
         if day_earlier != 0:
-            change = (eval(data[str(date_used.date())]["Close"]) - eval(data[str(day_earlier.date())]["Close"])) / eval(data[str(date_used.date())]["Adj Close"]) * 100
+            change = (eval(data[str(date_used.date())]) - eval(data[str(day_earlier.date())])) / eval(data[str(date_used.date())]) * 100
         else:
             change = 0
 
@@ -414,7 +416,7 @@ def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim
                 scr_left.addstr(n, 0, stock_code, curses.color_pair(13))
 
         try:
-            output_data = str(data[str(date_used.date())]["Close"])
+            output_data = str(data[str(date_used.date())])
             
             data_length = len(output_data)
             spaces_length = 12 - data_length
