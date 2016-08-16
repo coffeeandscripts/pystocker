@@ -8,6 +8,8 @@ python:
         - "3.5-dev" # 3.5 development branch
         - "nightly" # currently points to 3.6-dev
 # command to install dependencies
-install: "pip install ystockquote setuptools"
+before-install: pip install ystockquote setuptools
+install: python3 setup.py install
 # command to run tests
-script: sudo python3 setup.py install
+script: pystocker
+sudo: true
