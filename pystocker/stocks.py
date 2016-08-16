@@ -375,7 +375,10 @@ def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim
 
         stock_code_width_less = 10 - len(stock_code)
         if day_earlier != 0:
-            change = (eval(data[str(date_used.date())]) - eval(data[str(day_earlier.date())])) / eval(data[str(date_used.date())]) * 100
+            try:
+                change = (eval(data[str(date_used.date())]['Close']) - eval(data[str(day_earlier.date())]['Close'])) / eval(data[str(date_used.date())]['Close']) * 100
+            except:
+                change = 0
         else:
             change = 0
 
@@ -416,7 +419,7 @@ def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim
                 scr_left.addstr(n, 0, stock_code, curses.color_pair(13))
 
         try:
-            output_data = str(data[str(date_used.date())])
+            output_data = str(round(float(data[str(date_used.date())]['Close']),2))
             
             data_length = len(output_data)
             spaces_length = 12 - data_length
