@@ -8,6 +8,7 @@ Loop in the background to pull data.
 import curses
 import os
 import datetime
+import time
 
 #user generated imports
 from pystocker import *
@@ -94,5 +95,7 @@ while x == 1:
         write_hist_data(hist_data_dict)
         
         historicals_get_datetime = datetime.datetime.now()
-
         historicals = 1
+
+        time.sleep(15)
+
