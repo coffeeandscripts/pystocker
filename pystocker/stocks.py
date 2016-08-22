@@ -300,19 +300,20 @@ def fetch_historical_data(code):
 
     got_data = False
 
-    years = 3
+    years = 5
     days_per_year = 365.24
+    new_data_array = {}
 
     while got_data == False:
         try:
             data_array = ystockquote.get_historical_prices(str(code), str((datetime.datetime.now()-datetime.timedelta(days=(years*days_per_year))).date()), str(datetime.datetime.now().date()))
             for date in data_array.keys():
-                data_array[date] = data_array[date]["Close"]
+                new_data_array[date] = data_array[date]["Close"]
             got_data = True
         except:
             got_data = False
         
-    return data_array
+    return new_data_array
 
 def generate_date_list(stock_list):
 
@@ -323,7 +324,7 @@ def generate_date_list(stock_list):
 
     historical_data = get_historical_data(stock_list)
 
-    years = 3
+    years = 5
     days_in_year = 365.24
 
     back_counter = 0
@@ -347,9 +348,10 @@ def generate_date_list(stock_list):
 
     return date_list
 
-def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim, stock_list, stock_code):
+def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim, stock_list, stock_code, date_list):
 
-    date_list = generate_date_list(stock_list)
+    if date_list == []:
+        date_list = generate_date_list(stock_list)
 
     shown_dates = [0, int((scr_dim[1] - 11)/12)]
 
@@ -376,7 +378,7 @@ def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim
         stock_code_width_less = 10 - len(stock_code)
         if day_earlier != 0:
             try:
-                change = (eval(data[str(date_used.date())]['Close']) - eval(data[str(day_earlier.date())]['Close'])) / eval(data[str(date_used.date())]['Close']) * 100
+                change = (eval(data[str(date_used.date())]) - eval(data[str(day_earlier.date())])) / eval(data[str(date_used.date())]) * 100
             except:
                 change = 0
         else:
@@ -418,8 +420,9 @@ def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim
             else:
                 scr_left.addstr(n, 0, stock_code, curses.color_pair(13))
 
+        
         try:
-            output_data = str(round(float(data[str(date_used.date())]['Close']),2))
+            output_data = str(round(float(data[str(date_used.date())]),2))
             
             data_length = len(output_data)
             spaces_length = 12 - data_length
@@ -433,7 +436,7 @@ def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim
             while m < spaces_length:
                 output_data = output_data + " "
                 m = m + 1
- 
+
             if cursor[2] == (n + 1):
                 if change_amount == -1:
                     scr_main.addstr(n, ((date_pos_counter-1) * 12), output_data, curses.color_pair(8))
@@ -452,6 +455,8 @@ def print_historicals(n, data, scr_left, scr_main, scr_strip, x, cursor, scr_dim
             scr_main.addstr(n, ((date_pos_counter-1) * 12), "N/A")
 
         date_pos_counter = (shown_dates[1] - shown_dates[0]) - date_pos_counter + 1
+    
+    return date_list
 
 def get_historical_data(stock_list):
 
@@ -460,7 +465,7 @@ def get_historical_data(stock_list):
             hist_data_dict = eval(f.read())
     except:
         pass
-
+    
     return hist_data_dict
 
 

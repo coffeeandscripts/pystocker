@@ -29,7 +29,7 @@ def init_scr():
     curses.noecho()
     curses.cbreak()
     curses.curs_set(0)
-    curses.halfdelay(5)
+    curses.halfdelay(20)
     scr.keypad(True)
     scr.clear()    
 
@@ -174,6 +174,7 @@ top_point = False
 lockCounter = 0
 historicals = 0
 historical_data = {}
+date_list = []
 
 root_path = os.path.expanduser("~")
 
@@ -249,6 +250,7 @@ while x != 48 and x != 27:
             historical_data.clear()
             cursor[0] = 0
             cursor[3] = -1
+            date_list = []
     elif x == 115:    #sort by
         if sort_order[0] == cursor[0] and cursor[3] == sort_order[1] and sort_order[2] == 1:
             sort_order[2] = 0
@@ -303,7 +305,7 @@ while x != 48 and x != 27:
             stock_data[str(stock)] = stocks.Stock(str(stock), data)
             if historicals == 1:
                 if stock[:-1] in historical_data.keys() or stock in historical_data.keys():
-                    stocks.print_historicals(counter, historical_data[str(stock)[:-1]], scr_left, scr_main, scr_strip, x, cursor, scr_dim, stock_list, str(stock))
+                    date_list = stocks.print_historicals(counter, historical_data[str(stock)[:-1]], scr_left, scr_main, scr_strip, x, cursor, scr_dim, stock_list, str(stock), date_list)
                 else:
                     if cursor[2] == counter + 1:
                         scr_left.addstr(counter, 0, str(stock), curses.A_REVERSE)
@@ -351,7 +353,7 @@ while x != 48 and x != 27:
             scr_strip.addstr(0, 8, "v")
         else:
             scr_strip.addstr(0, 8, "^")
-    scr_top.addstr(0, 0, "pystocker v0.1.12 - by coffeeandscripts", curses.color_pair(6))
+    scr_top.addstr(0, 0, "pystocker v0.1.13 - by coffeeandscripts", curses.color_pair(6))
     
     scr_strip.refresh()
 
