@@ -7,7 +7,6 @@ Gives general functionality of the curses application
 ## IMPORTS ##
 import curses
 import curses.textpad as textpad
-import ystockquote
 import os
 import subprocess
 
