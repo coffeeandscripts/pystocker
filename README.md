@@ -1,8 +1,8 @@
-# **pystocker v0.1.15** - lightweight ncurses stock tracker
+# **pystocker v0.1.16** - lightweight ncurses stock tracker
 
 Built using python and ncurses, pystocker is a command-line based utility that provides simple and versatile interface to track stocks around the world.
 
-Featuring a series of permanent tickers of general market information at the top, you can follow many different features of a single stock and compare them to others. To provide a more visual experience, each of the stocks is color coded to signify the performance on the day. Additionally, you are able to sort the columns based alphabetically or ascending/descending for individual types of data. Displaying historical data for the stocks of your choice is easy.
+Featuring a series of permanent tickers of general market information at the top, you can follow many different features of a single stock and compare them to others. To provide a more visual experience, each of the stocks is color coded to signify the performance on the day.
 
 Below is an example of pystocker in action:
 
@@ -22,7 +22,7 @@ There are multiple installation methods:
 ### PyPI
 
 ~~~
-> sudo pip3 install pystocker		# Can install directly through pip in some cases
+> sudo pip install pystocker		# May have to run pip3
 > pystocker
 ~~~
 
@@ -69,11 +69,11 @@ Reset Settings:
 > pystocker
 ~~~
 
-## Known Issues:
+## Features to be added
 
- - Currently displaying historical data uses up a fair chunk of CPU while only downloading and processing 1 year worth of data (intend to increase this to 5 years with optimizations)
+* Presentation of historical data
 
- - shrinking the width of the screen to pointless widths leads to a curses error (understandably)
+* Sorting based on columns
 
 ## Licence
 
