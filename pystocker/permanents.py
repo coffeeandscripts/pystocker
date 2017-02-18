@@ -101,7 +101,7 @@ def print_permanents(scr_top, perm, row, col, perm_data, scr_dim):
     try:
         printing_perm = str(perm) + "=" + str(perm_data["price"])
     except:
-        printing_perm = "N/A"
+        printing_perm = str(perm) + "=N/A"
 
     perm_length = len(printing_perm) + 1
     

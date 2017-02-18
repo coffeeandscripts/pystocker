@@ -352,7 +352,7 @@ while x != 48 and x != 27:
             scr_strip.addstr(0, 8, "v")
         else:
             scr_strip.addstr(0, 8, "^")
-    scr_top.addstr(0, 0, "pystocker v0.1.13 - by coffeeandscripts", curses.color_pair(6))
+    scr_top.addstr(0, 0, "pystocker v0.1.21 - by coffeeandscripts", curses.color_pair(6))
     
     scr_strip.refresh()
 
