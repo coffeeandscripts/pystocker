@@ -97,5 +97,5 @@ while x == 1:
         historicals_get_datetime = datetime.datetime.now()
         historicals = 1
 
-        time.sleep(15)
+        time.sleep(120)
 
