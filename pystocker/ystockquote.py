@@ -35,6 +35,7 @@ def _request(symbol, stat):
 def get_all(symbol):
     """
     Get all available quote data for the given ticker symbol.
+
     Returns a dictionary.
     """
     values = _request(symbol, 'l1c1va2xj1b4j4dyekjm3m4rr5p5p6s7o').split(',')
@@ -150,6 +151,7 @@ def get_historical_prices(symbol, start_date, end_date):
     """
     Get historical prices for the given ticker symbol.
     Date format is 'YYYY-MM-DD'
+
     Returns a nested dictionary (dict of dicts).
     outer dict keys are dates ('YYYY-MM-DD')
     """
