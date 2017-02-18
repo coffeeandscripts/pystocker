@@ -98,7 +98,10 @@ def print_permanents(scr_top, perm, row, col, perm_data, scr_dim):
     curses.init_pair(21, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.init_pair(22, curses.COLOR_RED, curses.COLOR_BLACK)
 
-    printing_perm = str(perm) + "=" + str(perm_data["price"])
+    try:
+        printing_perm = str(perm) + "=" + str(perm_data["price"])
+    except:
+        printing_perm = "N/A"
 
     perm_length = len(printing_perm) + 1
     
