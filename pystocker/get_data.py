@@ -90,12 +90,12 @@ while x == 1:
 
         for stock in stock_list:
             hist_data = stocks.fetch_historical_data(stock[:-1])
-            hist_data_dict = prepare_stock_dict(stock[:-1], hist_data, hist_data_dict)
+            if hist_data != "Failed":
+                hist_data_dict = prepare_stock_dict(stock[:-1], hist_data, hist_data_dict)
 
         write_hist_data(hist_data_dict)
         
         historicals_get_datetime = datetime.datetime.now()
         historicals = 1
-
-        time.sleep(120)
+    time.sleep(120)
 

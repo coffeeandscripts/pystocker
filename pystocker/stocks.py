@@ -303,6 +303,7 @@ def fetch_historical_data(code):
     years = 5
     days_per_year = 365.24
     new_data_array = {}
+    counter = 0
 
     while got_data == False:
         try:
@@ -312,6 +313,10 @@ def fetch_historical_data(code):
             got_data = True
         except:
             got_data = False
+            counter = counter + 1
+            if counter == 3:
+                got_data = True
+                new_data_array = "Failed"
         
     return new_data_array
 
