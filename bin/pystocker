@@ -183,7 +183,6 @@ proc1 = subprocess.Popen(["python3", str(root_path + "/.pystocker/get_data.py")]
 
 #main loop
 while x != 48 and x != 27:
-
     term_size_change = check_term_size_change(scr, scr_dim)
 
     if term_size_change == True:
@@ -352,7 +351,7 @@ while x != 48 and x != 27:
             scr_strip.addstr(0, 8, "v")
         else:
             scr_strip.addstr(0, 8, "^")
-    scr_top.addstr(0, 0, "pystocker v0.1.21 - by coffeeandscripts", curses.color_pair(6))
+    scr_top.addstr(0, 0, "pystocker v0.1.23 - by coffeeandscripts", curses.color_pair(6))
     
     scr_strip.refresh()
 
