@@ -22,9 +22,11 @@ def cursor_right(cursor, historicals, scr_dim):
 
     if cursor[3] == -1 and historicals != 1:
         cursor[3] = 0
-    else:
+    elif historicals == 1:
         if cursor[0] < len(date_list) - int(((scr_dim[1] - 10)/12)+1) :
             cursor[0] = cursor[0] + 1
+    else:
+        cursor[0] = cursor[0] + 1
 
     if historicals != 1:
         if cursor[0] > len(col_list) - 1:

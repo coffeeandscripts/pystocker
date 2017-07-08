@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pystocker',
-        version='0.1.24',
+        version='0.1.25',
         description='lightweight ncurses stock tracker',
         url='http://github.com/coffeeandscripts/pystock',
         author='coffeeandscripts',
